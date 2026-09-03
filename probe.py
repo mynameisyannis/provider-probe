@@ -34,16 +34,23 @@ IATA_TO_ICAO = {
     "SQ": "SIA", "CX": "CPA", "JL": "JAL", "NH": "ANA", "EY": "ETD", "SV": "SVA", "MS": "MSR",
 }
 
-def get(url, headers):
+def get(url, headers, retries=4):
+    """Returns (status, parsed_json_or_None, note). Retries 429 with a growing pause."""
     req = urllib.request.Request(url, headers=headers)
-    try:
-        with urllib.request.urlopen(req, timeout=20) as r:
-            body = r.read().decode()
-            return r.status, (json.loads(body) if body.strip() else None)
-    except urllib.error.HTTPError as e:
-        return e.code, None
-    except Exception as e:  # network, decode
-        return -1, str(e)
+    for attempt in range(retries + 1):
+        try:
+            with urllib.request.urlopen(req, timeout=20) as r:
+                body = r.read().decode()
+                return r.status, (json.loads(body) if body.strip() else None), ""
+        except urllib.error.HTTPError as e:
+            snippet = ""
+            try: snippet = e.read().decode(errors="replace")[:160].replace("\n", " ")
+            except Exception: pass
+            if e.code == 429 and attempt < retries:
+                time.sleep(15 * (attempt + 1)); continue
+            return e.code, None, snippet
+        except Exception as e:  # network, decode
+            return -1, None, str(e)[:160]
 
 def now():
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
@@ -65,10 +72,10 @@ def probe_adb(w, flight, date):
     if not key: return
     url = (f"https://prod.api.market/api/v1/aedbx/aerodatabox/flights/Number/{flight}/{date}"
            "?dateLocalRole=Departure&withAircraftImage=false&withLocation=false&withFlightPlan=false")
-    st, body = get(url, {"x-api-market-key": key, "accept": "application/json"})
+    st, body, note = get(url, {"x-api-market-key": key, "accept": "application/json"})
     ts = now()
     if st != 200 or not isinstance(body, list):
-        emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="adb", raw_note=f"http {st}")
+        emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="adb", raw_note=f"http {st} {note}".strip())
         return
     for x in body:
         emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="adb",
@@ -82,12 +89,17 @@ def probe_aeroapi(w, flight, date, icao):
     key = os.environ.get("AEROAPI_KEY")
     if not key: return
     d = datetime.strptime(date, "%Y-%m-%d").date()
-    q = urllib.parse.urlencode({"ident_type": "designator", "start": str(d - timedelta(days=1)),
-                                "end": str(d + timedelta(days=1)), "max_pages": 1})
-    st, body = get(f"https://aeroapi.flightaware.com/aeroapi/flights/{icao}?{q}", {"x-apikey": key})
+    today = datetime.now(timezone.utc).date()
+    end = min(d + timedelta(days=1), today + timedelta(days=2))   # AeroAPI: end <= 2 days ahead
+    start = min(d - timedelta(days=1), end)
+    if d > today + timedelta(days=2):
+        emit(w, observed_at_utc=now(), flight=flight, date_local=date, provider="aeroapi", raw_note="skipped: >2 days ahead")
+        return
+    q = urllib.parse.urlencode({"ident_type": "designator", "start": str(start), "end": str(end), "max_pages": 1})
+    st, body, note = get(f"https://aeroapi.flightaware.com/aeroapi/flights/{icao}?{q}", {"x-apikey": key})
     ts = now()
     if st != 200 or not isinstance(body, dict):
-        emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="aeroapi", raw_note=f"http {st}")
+        emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="aeroapi", raw_note=f"http {st} {note}".strip())
         return
     for f in body.get("flights", []):
         so = f.get("scheduled_out") or ""
@@ -111,11 +123,11 @@ FR24_H = lambda: {"Authorization": f"Bearer {os.environ['FR24_TOKEN']}", "Accept
 
 def probe_fr24_live(w, flight, date):
     if not os.environ.get("FR24_TOKEN"): return
-    st, body = get(f"https://fr24api.flightradar24.com/api/live/flight-positions/full?flights={flight}", FR24_H())
+    st, body, note = get(f"https://fr24api.flightradar24.com/api/live/flight-positions/full?flights={flight}", FR24_H())
     ts = now()
     rows = (body or {}).get("data", []) if isinstance(body, dict) else []
     if not rows:
-        emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="fr24_live", raw_note=f"empty http {st}")
+        emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="fr24_live", raw_note=f"empty http {st} {note}".strip())
     for x in rows:
         emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="fr24_live",
              registration=x.get("reg", ""), status="airborne", provider_last_updated=x.get("timestamp", ""),
@@ -128,11 +140,11 @@ def probe_fr24_truth(w, flight, date, origin_tz="Europe/London"):
     frm = d0.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     to = (d0 + timedelta(days=1)).astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     q = urllib.parse.urlencode({"flights": flight, "flight_datetime_from": frm, "flight_datetime_to": to})
-    st, body = get(f"https://fr24api.flightradar24.com/api/flight-summary/full?{q}", FR24_H())
+    st, body, note = get(f"https://fr24api.flightradar24.com/api/flight-summary/full?{q}", FR24_H())
     ts = now()
     rows = (body or {}).get("data", []) if isinstance(body, dict) else []
     if not rows:
-        emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="fr24_truth", raw_note=f"empty http {st}")
+        emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="fr24_truth", raw_note=f"empty http {st} {note}".strip())
     for x in rows:
         emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="fr24_truth",
              instance_scheduled_out_utc=x.get("datetime_takeoff", ""), registration=x.get("reg", ""),
@@ -161,8 +173,8 @@ def main():
             if "--truth" in flags:
                 probe_fr24_truth(w, flight, date, (r.get("origin_tz") or "Europe/London").strip())
             else:
-                probe_adb(w, flight, date); time.sleep(0.3)
-                probe_aeroapi(w, flight, date, icao); time.sleep(0.3)
+                probe_adb(w, flight, date); time.sleep(0.5)
+                probe_aeroapi(w, flight, date, icao); time.sleep(1.5)
                 if "--fr24" in flags:
                     probe_fr24_live(w, flight, date); time.sleep(0.3)
             out.flush()
