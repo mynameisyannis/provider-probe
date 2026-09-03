@@ -34,9 +34,11 @@ IATA_TO_ICAO = {
     "SQ": "SIA", "CX": "CPA", "JL": "JAL", "NH": "ANA", "EY": "ETD", "SV": "SVA", "MS": "MSR",
 }
 
+UA = "curl/8.7.1"   # api.market's Cloudflare returns 1010 for Python-urllib's default signature
+
 def get(url, headers, retries=4):
     """Returns (status, parsed_json_or_None, note). Retries 429 with a growing pause."""
-    req = urllib.request.Request(url, headers=headers)
+    req = urllib.request.Request(url, headers={"User-Agent": UA, **headers})
     for attempt in range(retries + 1):
         try:
             with urllib.request.urlopen(req, timeout=20) as r:
@@ -88,19 +90,22 @@ def probe_adb(w, flight, date):
 def probe_aeroapi(w, flight, date, icao):
     key = os.environ.get("AEROAPI_KEY")
     if not key: return
-    d = datetime.strptime(date, "%Y-%m-%d").date()
-    today = datetime.now(timezone.utc).date()
-    end = min(d + timedelta(days=1), today + timedelta(days=2))   # AeroAPI: end <= 2 days ahead
-    start = min(d - timedelta(days=1), end)
-    if d > today + timedelta(days=2):
-        emit(w, observed_at_utc=now(), flight=flight, date_local=date, provider="aeroapi", raw_note="skipped: >2 days ahead")
+    d = datetime.strptime(date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    nowdt = datetime.now(timezone.utc)
+    latest = nowdt + timedelta(hours=47)                       # AeroAPI refuses end > ~2 days ahead
+    end = min(d + timedelta(days=1), latest)
+    start = d - timedelta(days=1)
+    if end <= start + timedelta(hours=1):
+        emit(w, observed_at_utc=now(), flight=flight, date_local=date, provider="aeroapi", raw_note="skipped: beyond AeroAPI window")
         return
-    q = urllib.parse.urlencode({"ident_type": "designator", "start": str(start), "end": str(end), "max_pages": 1})
+    fmt = lambda t: t.strftime("%Y-%m-%dT%H:%M:%SZ")
+    q = urllib.parse.urlencode({"ident_type": "designator", "start": fmt(start), "end": fmt(end), "max_pages": 1})
     st, body, note = get(f"https://aeroapi.flightaware.com/aeroapi/flights/{icao}?{q}", {"x-apikey": key})
     ts = now()
     if st != 200 or not isinstance(body, dict):
         emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="aeroapi", raw_note=f"http {st} {note}".strip())
         return
+    matched = 0
     for f in body.get("flights", []):
         so = f.get("scheduled_out") or ""
         tz = (f.get("origin") or {}).get("timezone")
@@ -112,11 +117,15 @@ def probe_aeroapi(w, flight, date, icao):
                 pass
         if local_date and local_date != date:
             continue  # a different service date of the same number
+        matched += 1
         emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="aeroapi",
              instance_scheduled_out_utc=so, registration=f.get("registration") or "",
              status=f.get("status", ""), inbound_id=f.get("inbound_fa_flight_id") or "",
              operating=f.get("operator_icao") or f.get("operator") or "",
              raw_note="codeshares=" + ",".join(f.get("codeshares_iata") or []))
+    if matched == 0:
+        emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="aeroapi",
+             raw_note=f"200 but no instance on {date} in window {fmt(start)}..{fmt(end)} ({len(body.get('flights', []))} other)")
 
 # ---------- Flightradar24 ----------
 FR24_H = lambda: {"Authorization": f"Bearer {os.environ['FR24_TOKEN']}", "Accept-Version": "v1"}
