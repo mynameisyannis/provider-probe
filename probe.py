@@ -32,6 +32,7 @@ IATA_TO_ICAO = {
     "AZ": "ITY", "VY": "VLG", "W6": "WZZ", "LO": "LOT", "EW": "EWG", "BE": "BEE", "LS": "EXS",
     "TOM": "TOM", "BY": "TOM", "DY": "NAX", "D8": "NAX", "AC": "ACA", "NZ": "ANZ", "QF": "QFA",
     "SQ": "SIA", "CX": "CPA", "JL": "JAL", "NH": "ANA", "EY": "ETD", "SV": "SVA", "MS": "MSR",
+    "LG": "LGL", "GR": "AUR", "KM": "KMM", "FI": "ICE", "EW": "EWG", "HV": "TRA", "PC": "PGT", "A3": "AEE",
 }
 
 UA = "curl/8.7.1"   # api.market's Cloudflare returns 1010 for Python-urllib's default signature
