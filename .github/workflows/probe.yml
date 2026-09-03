@@ -1,0 +1,64 @@
+# .github/workflows/probe.yml — runs the provider probe on GitHub's schedule.
+# Every 3 hours: probe pass (ADB + AeroAPI for every upcoming flight in flights.csv).
+# Nightly 23:30Z: truth pass (FR24 flight-summary for yesterday's flights).
+# Each run commits observations.csv and a fresh report.txt back to this repo.
+#
+# GitHub schedules are best-effort: a run can start a few minutes late or, rarely,
+# be skipped under load. Fine for 3-hourly sampling; the timestamps are what matter.
+
+name: provider-probe
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'   # probe
+    - cron: '30 23 * * *'   # truth
+  workflow_dispatch:
+    inputs:
+      pass:
+        description: which pass to run
+        type: choice
+        options: [probe, truth, score]
+        default: probe
+
+permissions:
+  contents: write
+
+concurrency:
+  group: probe
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: choose the pass
+        id: p
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "pass=${{ inputs.pass }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "30 23 * * *" ]; then
+            echo "pass=truth" >> "$GITHUB_OUTPUT"
+          else
+            echo "pass=probe" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: run it
+        env:
+          ADB_KEY: ${{ secrets.ADB_KEY }}
+          AEROAPI_KEY: ${{ secrets.AEROAPI_KEY }}
+          FR24_TOKEN: ${{ secrets.FR24_TOKEN }}
+        run: |
+          chmod +x run.sh
+          ./run.sh "${{ steps.p.outputs.pass }}"
+          python3 score.py > report.txt || true
+
+      - name: commit results
+        run: |
+          git config user.name  "provider-probe"
+          git config user.email "provider-probe@users.noreply.github.com"
+          git add observations.csv report.txt
+          git commit -m "probe: ${{ steps.p.outputs.pass }} $(date -u +%FT%TZ)" || { echo "nothing new"; exit 0; }
+          git pull --rebase
+          git push
