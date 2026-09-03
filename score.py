@@ -19,11 +19,47 @@ def parse(ts):
 if not os.path.exists("observations.csv"):
     print("no observations.csv yet"); sys.exit(0)
 rows = list(csv.DictReader(open("observations.csv", newline="")))
+
+def norm_sched(v):
+    """'2026-09-03 20:45Z' (ADB) or '2026-09-03T20:45:00Z' (AeroAPI) -> aware datetime, or None."""
+    if not v: return None
+    v = v.strip().replace(" ", "T").replace("Z", "+00:00")
+    if len(v) == 22: v = v[:16] + ":00" + v[16:]   # ADB has no seconds
+    try: return datetime.fromisoformat(v)
+    except Exception: return None
+
+# Group by flight+date, then split into instances by scheduled departure (a number can fly twice a day).
+# Truth rows (FR24) carry a takeoff time instead; they are attached to the nearest instance below.
 by = defaultdict(list)
 for r in rows:
     by[(r["flight"], r["date_local"])].append(r)
 
+instances = {}   # (flight, date, sched_iso) -> list of provider rows
+for (flight, date), obs in by.items():
+    scheds = sorted({norm_sched(o["instance_scheduled_out_utc"]) for o in obs
+                     if o["provider"] in ("adb", "aeroapi") and norm_sched(o["instance_scheduled_out_utc"])})
+    if not scheds:
+        instances[(flight, date, "")] = obs; continue
+    # collapse schedules within 90 minutes of each other (ADB revisedTime vs AeroAPI scheduled_out drift)
+    buckets = []
+    for sc in scheds:
+        if buckets and (sc - buckets[-1][-1]).total_seconds() < 5400: buckets[-1].append(sc)
+        else: buckets.append([sc])
+    keys = [b[0] for b in buckets]
+    def nearest(t):
+        return min(keys, key=lambda k: abs((k - t).total_seconds()))
+    for o in obs:
+        if o["provider"] in ("adb", "aeroapi"):
+            sc = norm_sched(o["instance_scheduled_out_utc"])
+            k = nearest(sc) if sc else keys[0]
+        else:  # fr24_truth carries datetime_takeoff; fr24_live carries nothing useful -> first instance
+            t = norm_sched(o["instance_scheduled_out_utc"])
+            k = nearest(t) if t else keys[0]
+        instances.setdefault((flight, date, k.isoformat()), []).append(o)
+by = {(f"{fl}@{k[11:16]}" if k else fl, d): v for (fl, d, k), v in instances.items()}
+
 def airline(flight):
+    flight = flight.split("@")[0]
     i = 0
     while i < len(flight) and not flight[i].isdigit(): i += 1
     return flight[:i]
