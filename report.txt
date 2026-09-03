@@ -1,0 +1,29 @@
+
+55 flight-dates, 110 observations
+
+LEAD TIME (hours before departure the registration first appeared, pre-departure obs only)
+  aeroapi  n=  3  median= 11.9h  min= 11.7h  max= 12.0h
+
+ACCURACY (last pre-departure registration vs ADS-B truth)
+
+SWAPS: none
+
+DISAGREEMENTS (both had a value, values differ) -> adb / aeroapi / truth
+  none
+
+COVERAGE (flights where the provider had a registration before departure)
+  AA   adb=0/2  aeroapi=1/2
+  AC   adb=0/2  aeroapi=1/2
+  AY   adb=0/2  aeroapi=1/2
+  BA   adb=0/22  aeroapi=0/22
+  CX   adb=0/2  aeroapi=0/2
+  EI   adb=0/3  aeroapi=0/3
+  EK   adb=0/4  aeroapi=0/4
+  KL   adb=0/3  aeroapi=0/3
+  LX   adb=0/3  aeroapi=0/3
+  MS   adb=0/2  aeroapi=0/2
+  QR   adb=0/2  aeroapi=0/2
+  SK   adb=0/2  aeroapi=0/2
+  SV   adb=0/2  aeroapi=0/2
+  UA   adb=0/2  aeroapi=0/2
+  VS   adb=0/2  aeroapi=0/2
