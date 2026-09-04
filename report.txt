@@ -1,5 +1,5 @@
 
-58 flight-dates, 310 observations
+58 flight-dates, 318 observations
 
 LEAD TIME (hours before departure the registration first appeared, pre-departure obs only)
   adb      n=  1  median= 19.4h  min= 19.4h  max= 19.4h
