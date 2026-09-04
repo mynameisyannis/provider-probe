@@ -8,6 +8,7 @@ Stdlib only. Keys come from the environment: ADB_KEY, AEROAPI_KEY, FR24_TOKEN.
     python3 probe.py flights.csv --truth        # FR24 flight-summary for the date (3 credits/record) -> ground truth
     --from-today                                 # skip rows whose date is in the past (for the probe pass)
     --yesterday                                  # only rows dated yesterday UTC (for the truth pass)
+    --missing-truth                              # every past date with no fr24_truth row yet (self-healing backfill)
 
 flights.csv columns (header required):
     flight,date[,icao]
@@ -161,6 +162,19 @@ def probe_fr24_truth(w, flight, date, origin_tz="Europe/London"):
              status="ended" if x.get("flight_ended") else "flying", provider_last_updated=x.get("last_seen", ""),
              operating=x.get("operating_as", ""), raw_note=f"{x.get('orig_iata')}-{x.get('dest_iata')} first_seen={x.get('first_seen')}")
 
+def truth_already_taken(path=OUT):
+    """(flight, date) pairs that already have an fr24_truth row — hit or confirmed-empty.
+    Used by --missing-truth so a skipped nightly slot is caught the next night, and so a
+    flight FR24 has no record for is not re-queried forever."""
+    seen = set()
+    if not os.path.exists(path):
+        return seen
+    with open(path, newline="") as fh:
+        for r in csv.DictReader(fh):
+            if r.get("provider") == "fr24_truth":
+                seen.add((r["flight"], r["date_local"]))
+    return seen
+
 def main():
     if len(sys.argv) < 2:
         print(__doc__); sys.exit(1)
@@ -170,17 +184,19 @@ def main():
         w = csv.DictWriter(out, fieldnames=FIELDS)
         if new: w.writeheader()
         today = datetime.now(timezone.utc).date()
+        taken = truth_already_taken() if "--missing-truth" in flags else set()
         for r in csv.DictReader(fh):
             flight = r["flight"].strip().upper().replace(" ", "")
             date = r["date"].strip()
             d = datetime.strptime(date, "%Y-%m-%d").date()
             if "--from-today" in flags and d < today: continue
             if "--yesterday" in flags and d != today - timedelta(days=1): continue
+            if "--missing-truth" in flags and (d >= today or (flight, date) in taken): continue
             icao = (r.get("icao") or "").strip().upper()
             if not icao:
                 al, num = split_flight(flight)
                 icao = IATA_TO_ICAO.get(al, al) + num
-            if "--truth" in flags:
+            if "--truth" in flags or "--missing-truth" in flags:
                 probe_fr24_truth(w, flight, date, (r.get("origin_tz") or "Europe/London").strip())
             else:
                 probe_adb(w, flight, date); time.sleep(0.5)
