@@ -10,8 +10,8 @@ name: provider-probe
 
 on:
   schedule:
-    - cron: '17 */3 * * *'   # probe
-    - cron: '43 23 * * *'   # truth
+    - cron: '17 */3 * * *'   # probe (every 3h, off the congested :00 slot)
+    - cron: '43 23 * * *'   # truth (nightly, previous day's flights)
   workflow_dispatch:
     inputs:
       pass:
