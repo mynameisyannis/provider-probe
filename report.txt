@@ -1,9 +1,9 @@
 
-181 flight-dates, 2636 observations
+181 flight-dates, 2981 observations
 
 LEAD TIME (hours before departure the registration first appeared, pre-departure obs only)
   adb      n= 32  median=  5.5h  min=  1.3h  max= 28.8h
-  aeroapi  n= 74  median= 12.2h  min=  0.5h  max= 46.6h
+  aeroapi  n= 75  median= 12.2h  min=  0.5h  max= 46.6h
 
 ACCURACY (last pre-departure registration vs ADS-B truth)
   adb      right=3 wrong=2  (60%)
@@ -29,7 +29,7 @@ COVERAGE (flights where the provider had a registration before departure)
   KL   adb=1/10  aeroapi=1/10
   LG   adb=0/3  aeroapi=0/3
   LS   adb=0/3  aeroapi=0/3
-  LX   adb=5/10  aeroapi=4/10
+  LX   adb=5/10  aeroapi=5/10
   MS   adb=0/3  aeroapi=0/3
   QR   adb=0/3  aeroapi=0/3
   SK   adb=0/3  aeroapi=0/3
@@ -40,14 +40,14 @@ COVERAGE (flights where the provider had a registration before departure)
   VS   adb=0/3  aeroapi=0/3
 
 SETTLING (registration changed since the previous observation, by hours before departure)
-  24h+      1 of   68  ( 1.5%)
-  12-24h    8 of   98  ( 8.2%)
-  6-12h     4 of   35  (11.4%)
+  24h+      1 of   82  ( 1.2%)
+  12-24h    8 of  106  ( 7.5%)
+  6-12h     4 of   51  ( 7.8%)
   3-6h      2 of   27  ( 7.4%)
-  <3h       1 of   21  ( 4.8%)
+  <3h       1 of   24  ( 4.2%)
 
 SETTLING BY HAUL (route distance from AeroAPI; short <900mi, medium <2500mi, long beyond)
-  short      5 of   83  ( 6.0%)
-  medium     5 of   41  (12.2%)
-  long       6 of  119  ( 5.0%)
+  short      5 of   97  ( 5.2%)
+  medium     5 of   51  ( 9.8%)
+  long       6 of  136  ( 4.4%)
   unknown    0 of    6  ( 0.0%)
