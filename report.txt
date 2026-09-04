@@ -1,5 +1,5 @@
 
-181 flight-dates, 2981 observations
+181 flight-dates, 3326 observations
 
 LEAD TIME (hours before departure the registration first appeared, pre-departure obs only)
   adb      n= 32  median=  5.5h  min=  1.3h  max= 28.8h
@@ -40,14 +40,14 @@ COVERAGE (flights where the provider had a registration before departure)
   VS   adb=0/3  aeroapi=0/3
 
 SETTLING (registration changed since the previous observation, by hours before departure)
-  24h+      1 of   82  ( 1.2%)
-  12-24h    8 of  106  ( 7.5%)
-  6-12h     4 of   51  ( 7.8%)
+  24h+      1 of   94  ( 1.1%)
+  12-24h    8 of  114  ( 7.0%)
+  6-12h     4 of   70  ( 5.7%)
   3-6h      2 of   27  ( 7.4%)
   <3h       1 of   24  ( 4.2%)
 
 SETTLING BY HAUL (route distance from AeroAPI; short <900mi, medium <2500mi, long beyond)
-  short      5 of   97  ( 5.2%)
-  medium     5 of   51  ( 9.8%)
-  long       6 of  136  ( 4.4%)
+  short      5 of  111  ( 4.5%)
+  medium     5 of   61  ( 8.2%)
+  long       6 of  151  ( 4.0%)
   unknown    0 of    6  ( 0.0%)
