@@ -10,8 +10,8 @@ name: provider-probe
 
 on:
   schedule:
-    - cron: '0 */3 * * *'   # probe
-    - cron: '30 23 * * *'   # truth
+    - cron: '17 */3 * * *'   # probe
+    - cron: '43 23 * * *'   # truth
   workflow_dispatch:
     inputs:
       pass:
@@ -38,7 +38,7 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "pass=${{ inputs.pass }}" >> "$GITHUB_OUTPUT"
-          elif [ "${{ github.event.schedule }}" = "30 23 * * *" ]; then
+          elif [ "${{ github.event.schedule }}" = "43 23 * * *" ]; then
             echo "pass=truth" >> "$GITHUB_OUTPUT"
           else
             echo "pass=probe" >> "$GITHUB_OUTPUT"
@@ -58,7 +58,7 @@ jobs:
         run: |
           git config user.name  "provider-probe"
           git config user.email "provider-probe@users.noreply.github.com"
-          git add observations.csv report.txt
+          git add observations.csv report.txt flights.csv
           git commit -m "probe: ${{ steps.p.outputs.pass }} $(date -u +%FT%TZ)" || { echo "nothing new"; exit 0; }
           git pull --rebase
           git push

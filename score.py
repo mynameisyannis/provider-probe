@@ -59,10 +59,10 @@ for (flight, date), obs in by.items():
 by = {(f"{fl}@{k[11:16]}" if k else fl, d): v for (fl, d, k), v in instances.items()}
 
 def airline(flight):
+    """IATA carrier code: two letters, or letter+digit (U2, W6, D8, A3), or three letters (TOM)."""
     flight = flight.split("@")[0]
-    i = 0
-    while i < len(flight) and not flight[i].isdigit(): i += 1
-    return flight[:i]
+    if len(flight) > 3 and flight[:3].isalpha() and flight[3].isdigit(): return flight[:3]
+    return flight[:2]
 
 per_flight = []
 lead = defaultdict(list)          # provider -> hours before departure the reg first appeared

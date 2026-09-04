@@ -4,7 +4,7 @@ set -e
 cd "$(dirname "$0")"
 [ -f "$HOME/.provider-probe.env" ] && . "$HOME/.provider-probe.env"
 case "$1" in
-  probe) exec python3 probe.py flights.csv --from-today ;;
+  probe) python3 roll.py; exec python3 probe.py flights.csv --from-today ;;
   truth) exec python3 probe.py flights.csv --truth --yesterday ;;
   score) exec python3 score.py --csv ;;
   *) echo "usage: $0 probe|truth|score" >&2; exit 1 ;;
