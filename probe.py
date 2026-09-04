@@ -123,7 +123,7 @@ def probe_aeroapi(w, flight, date, icao):
              instance_scheduled_out_utc=so, registration=f.get("registration") or "",
              status=f.get("status", ""), inbound_id=f.get("inbound_fa_flight_id") or "",
              operating=f.get("operator_icao") or f.get("operator") or "",
-             raw_note="codeshares=" + ",".join(f.get("codeshares_iata") or []))
+             raw_note="codeshares=" + ",".join(f.get("codeshares_iata") or []) + f" dist={f.get('route_distance') or ''}")
     if matched == 0:
         emit(w, observed_at_utc=ts, flight=flight, date_local=date, provider="aeroapi",
              raw_note=f"200 but no instance on {date} in window {fmt(start)}..{fmt(end)} ({len(body.get('flights', []))} other)")

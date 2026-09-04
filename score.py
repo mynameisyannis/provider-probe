@@ -127,6 +127,36 @@ print("\nCOVERAGE (flights where the provider had a registration before departur
 for al in sorted(coverage):
     print(f"  {al:4s} " + "  ".join(f"{p}={coverage[al][p][0]}/{coverage[al][p][1]}" for p in ("adb", "aeroapi")))
 
+# ---- when does the registration settle? change rate between consecutive observations ----
+import re
+def hb(h): return "<3h" if h < 3 else "3-6h" if h < 6 else "6-12h" if h < 12 else "12-24h" if h < 24 else "24h+"
+def haul(mi): return "unknown" if mi is None else "short" if mi < 900 else "medium" if mi < 2500 else "long"
+by_hours = defaultdict(lambda: [0, 0]); by_haul = defaultdict(lambda: [0, 0]); inst_haul = {}
+for (flight, date), obs in by.items():
+    for o in obs:
+        m = re.search(r"dist=(\d+)", o.get("raw_note", "") or "")
+        if m: inst_haul[(flight, date)] = int(m.group(1))
+for (flight, date), obs in by.items():
+    sched = next((parse(o["instance_scheduled_out_utc"]) for o in obs if o["provider"] == "aeroapi" and o["instance_scheduled_out_utc"]), None)
+    if not sched: continue
+    for prov in ("adb", "aeroapi"):
+        seq = sorted(((parse(o["observed_at_utc"]), o["registration"]) for o in obs
+                      if o["provider"] == prov and o["registration"] and parse(o["observed_at_utc"]) < sched))
+        for i in range(1, len(seq)):
+            hours = (sched - seq[i][0]).total_seconds() / 3600
+            changed = seq[i][1] != seq[i - 1][1]
+            by_hours[hb(hours)][1] += 1; by_hours[hb(hours)][0] += changed
+            hz = haul(inst_haul.get((flight, date)))
+            by_haul[hz][1] += 1; by_haul[hz][0] += changed
+print("\nSETTLING (registration changed since the previous observation, by hours before departure)")
+for b in ("24h+", "12-24h", "6-12h", "3-6h", "<3h"):
+    c, n = by_hours[b]
+    if n: print(f"  {b:7s} {c:3d} of {n:4d}  ({100*c/n:4.1f}%)")
+print("\nSETTLING BY HAUL (route distance from AeroAPI; short <900mi, medium <2500mi, long beyond)")
+for b in ("short", "medium", "long", "unknown"):
+    c, n = by_haul[b]
+    if n: print(f"  {b:8s} {c:3d} of {n:4d}  ({100*c/n:4.1f}%)")
+
 if "--csv" in sys.argv:
     keys = sorted({k for l in per_flight for k in l})
     with open("per-flight.csv", "w", newline="") as f:
