@@ -1,39 +1,39 @@
 
-124 flight-dates, 566 observations
+181 flight-dates, 911 observations
 
 LEAD TIME (hours before departure the registration first appeared, pre-departure obs only)
-  adb      n= 21  median=  4.9h  min=  1.3h  max= 28.8h
-  aeroapi  n= 53  median= 11.9h  min=  1.0h  max= 41.8h
+  adb      n= 24  median=  4.9h  min=  1.3h  max= 28.8h
+  aeroapi  n= 66  median= 12.0h  min=  0.5h  max= 46.6h
 
 ACCURACY (last pre-departure registration vs ADS-B truth)
   adb      right=3 wrong=2  (60%)
   aeroapi  right=5 wrong=0  (100%)
 
-SWAPS (registration changed between observations before departure): aeroapi=1
+SWAPS (registration changed between observations before departure): aeroapi=8, adb=2
 
 DISAGREEMENTS (both had a value, values differ) -> adb / aeroapi / truth
   BA249@20:45 / 2026-09-03 / G-YMMT / G-YMMR / G-YMMR
 
 COVERAGE (flights where the provider had a registration before departure)
-  AA   adb=0/2  aeroapi=2/2
-  AC   adb=0/2  aeroapi=2/2
-  AY   adb=0/2  aeroapi=1/2
-  AZ   adb=2/2  aeroapi=0/2
-  BA   adb=12/51  aeroapi=34/51
-  BY   adb=0/4  aeroapi=0/4
-  CX   adb=0/2  aeroapi=0/2
-  EI   adb=1/3  aeroapi=0/3
-  EK   adb=0/6  aeroapi=1/6
-  GR   adb=0/2  aeroapi=0/2
-  KL   adb=1/7  aeroapi=1/7
-  LG   adb=0/2  aeroapi=0/2
-  LS   adb=0/2  aeroapi=0/2
-  LX   adb=4/7  aeroapi=4/7
-  MS   adb=0/2  aeroapi=0/2
-  QR   adb=0/2  aeroapi=0/2
-  SK   adb=0/2  aeroapi=0/2
-  SV   adb=0/2  aeroapi=2/2
-  TK   adb=0/2  aeroapi=0/2
-  U2   adb=1/16  aeroapi=4/16
-  UA   adb=0/2  aeroapi=2/2
-  VS   adb=0/2  aeroapi=0/2
+  AA   adb=0/3  aeroapi=3/3
+  AC   adb=0/3  aeroapi=3/3
+  AY   adb=0/3  aeroapi=1/3
+  AZ   adb=2/3  aeroapi=0/3
+  BA   adb=15/73  aeroapi=38/73
+  BY   adb=0/6  aeroapi=0/6
+  CX   adb=0/3  aeroapi=1/3
+  EI   adb=1/4  aeroapi=0/4
+  EK   adb=0/9  aeroapi=3/9
+  GR   adb=0/3  aeroapi=0/3
+  KL   adb=1/10  aeroapi=1/10
+  LG   adb=0/3  aeroapi=0/3
+  LS   adb=0/3  aeroapi=0/3
+  LX   adb=4/10  aeroapi=4/10
+  MS   adb=0/3  aeroapi=0/3
+  QR   adb=0/3  aeroapi=0/3
+  SK   adb=0/3  aeroapi=0/3
+  SV   adb=0/3  aeroapi=3/3
+  TK   adb=0/3  aeroapi=0/3
+  U2   adb=1/24  aeroapi=6/24
+  UA   adb=0/3  aeroapi=3/3
+  VS   adb=0/3  aeroapi=0/3
