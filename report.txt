@@ -1,53 +1,54 @@
 
-181 flight-dates, 3731 observations
+238 flight-dates, 4072 observations
 
 LEAD TIME (hours before departure the registration first appeared, pre-departure obs only)
   adb      n= 33  median=  5.6h  min=  1.3h  max= 39.9h
-  aeroapi  n= 78  median= 12.2h  min=  0.5h  max= 46.6h
+  aeroapi  n= 82  median= 12.1h  min=  0.2h  max= 46.6h
 
 ACCURACY (last pre-departure registration vs ADS-B truth)
   adb      right=20 wrong=4  (83%)
   aeroapi  right=43 wrong=1  (98%)
 
-SWAPS (registration changed between observations before departure): aeroapi=13, adb=3
+SWAPS (registration changed between observations before departure): aeroapi=14, adb=3
 
 DISAGREEMENTS (both had a value, values differ) -> adb / aeroapi / truth
   BA249@20:45 / 2026-09-03 / G-YMMT / G-YMMR / G-YMMR
   BA249@20:45 / 2026-09-04 / G-YMMR / G-YMMH / G-YMMH
+  U28033@06:30 / 2026-09-05 / G-EJCJ / G-ZXIF / ?
 
 COVERAGE (flights where the provider had a registration before departure)
-  AA   adb=0/3  aeroapi=3/3
-  AC   adb=0/3  aeroapi=3/3
-  AY   adb=0/3  aeroapi=1/3
-  AZ   adb=2/3  aeroapi=0/3
-  BA   adb=20/73  aeroapi=48/73
-  BY   adb=0/6  aeroapi=0/6
-  CX   adb=0/3  aeroapi=1/3
-  EI   adb=1/4  aeroapi=0/4
-  EK   adb=0/9  aeroapi=3/9
-  GR   adb=0/3  aeroapi=0/3
-  KL   adb=2/10  aeroapi=1/10
-  LG   adb=0/3  aeroapi=0/3
-  LS   adb=0/3  aeroapi=0/3
-  LX   adb=5/10  aeroapi=5/10
-  MS   adb=0/3  aeroapi=0/3
-  QR   adb=0/3  aeroapi=0/3
-  SK   adb=0/3  aeroapi=0/3
-  SV   adb=0/3  aeroapi=3/3
-  TK   adb=0/3  aeroapi=0/3
-  U2   adb=3/24  aeroapi=7/24
-  UA   adb=0/3  aeroapi=3/3
-  VS   adb=0/3  aeroapi=0/3
+  AA   adb=0/4  aeroapi=3/4
+  AC   adb=0/4  aeroapi=3/4
+  AY   adb=0/4  aeroapi=1/4
+  AZ   adb=2/4  aeroapi=0/4
+  BA   adb=20/95  aeroapi=48/95
+  BY   adb=0/8  aeroapi=0/8
+  CX   adb=0/4  aeroapi=1/4
+  EI   adb=1/5  aeroapi=0/5
+  EK   adb=0/12  aeroapi=3/12
+  GR   adb=0/4  aeroapi=0/4
+  KL   adb=2/13  aeroapi=1/13
+  LG   adb=0/4  aeroapi=0/4
+  LS   adb=0/4  aeroapi=0/4
+  LX   adb=5/13  aeroapi=5/13
+  MS   adb=0/4  aeroapi=0/4
+  QR   adb=0/4  aeroapi=0/4
+  SK   adb=0/4  aeroapi=0/4
+  SV   adb=0/4  aeroapi=3/4
+  TK   adb=0/4  aeroapi=0/4
+  U2   adb=3/32  aeroapi=11/32
+  UA   adb=0/4  aeroapi=3/4
+  VS   adb=0/4  aeroapi=0/4
 
 SETTLING (registration changed since the previous observation, by hours before departure)
-  24h+      1 of  106  ( 0.9%)
-  12-24h    8 of  116  ( 6.9%)
+  24h+      2 of  121  ( 1.7%)
+  12-24h    8 of  118  ( 6.8%)
   6-12h     6 of   95  ( 6.3%)
-  3-6h      2 of   27  ( 7.4%)
-  <3h       1 of   24  ( 4.2%)
+  3-6h      2 of   39  ( 5.1%)
+  <3h       1 of   38  ( 2.6%)
 
 SETTLING BY HAUL (route distance from AeroAPI; short <900mi, medium <2500mi, long beyond)
-  short      7 of  125  ( 5.6%)
-  medium     5 of   71  ( 7.0%)
-  long       6 of  166  ( 3.6%)
+  short      8 of  141  ( 5.7%)
+  medium     5 of   82  ( 6.1%)
+  long       6 of  182  ( 3.3%)
   unknown    0 of    6  ( 0.0%)
