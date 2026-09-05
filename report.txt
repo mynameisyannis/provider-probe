@@ -1,15 +1,15 @@
 
-238 flight-dates, 5095 observations
+238 flight-dates, 5436 observations
 
 LEAD TIME (hours before departure the registration first appeared, pre-departure obs only)
   adb      n= 38  median=  5.6h  min=  1.3h  max= 39.9h
-  aeroapi  n=106  median= 14.8h  min=  0.1h  max= 46.6h
+  aeroapi  n=107  median= 14.5h  min=  0.1h  max= 46.6h
 
 ACCURACY (last pre-departure registration vs ADS-B truth)
   adb      right=20 wrong=4  (83%)
   aeroapi  right=43 wrong=1  (98%)
 
-SWAPS (registration changed between observations before departure): aeroapi=15, adb=3
+SWAPS (registration changed between observations before departure): aeroapi=16, adb=3
 
 DISAGREEMENTS (both had a value, values differ) -> adb / aeroapi / truth
   BA249@20:45 / 2026-09-03 / G-YMMT / G-YMMR / G-YMMR
@@ -30,7 +30,7 @@ COVERAGE (flights where the provider had a registration before departure)
   GR   adb=0/4  aeroapi=0/4
   KL   adb=2/13  aeroapi=1/13
   LG   adb=0/4  aeroapi=0/4
-  LS   adb=0/4  aeroapi=0/4
+  LS   adb=0/4  aeroapi=1/4
   LX   adb=7/13  aeroapi=5/13
   MS   adb=0/4  aeroapi=0/4
   QR   adb=0/4  aeroapi=0/4
@@ -42,14 +42,14 @@ COVERAGE (flights where the provider had a registration before departure)
   VS   adb=0/4  aeroapi=0/4
 
 SETTLING (registration changed since the previous observation, by hours before departure)
-  24h+      3 of  146  ( 2.1%)
-  12-24h    9 of  148  ( 6.1%)
-  6-12h     6 of   97  ( 6.2%)
+  24h+      4 of  160  ( 2.5%)
+  12-24h    9 of  167  ( 5.4%)
+  6-12h     6 of  101  ( 5.9%)
   3-6h      2 of   41  ( 4.9%)
-  <3h       2 of   48  ( 4.2%)
+  <3h       2 of   51  ( 3.9%)
 
 SETTLING BY HAUL (route distance from AeroAPI; short <900mi, medium <2500mi, long beyond)
-  short      9 of  154  ( 5.8%)
-  medium     6 of   95  ( 6.3%)
-  long       7 of  225  ( 3.1%)
+  short      9 of  168  ( 5.4%)
+  medium     6 of  104  ( 5.8%)
+  long       8 of  242  ( 3.3%)
   unknown    0 of    6  ( 0.0%)
