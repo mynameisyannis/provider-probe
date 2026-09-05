@@ -1,9 +1,9 @@
 
-238 flight-dates, 5436 observations
+238 flight-dates, 5778 observations
 
 LEAD TIME (hours before departure the registration first appeared, pre-departure obs only)
   adb      n= 38  median=  5.6h  min=  1.3h  max= 39.9h
-  aeroapi  n=107  median= 14.5h  min=  0.1h  max= 46.6h
+  aeroapi  n=110  median= 14.8h  min=  0.1h  max= 46.6h
 
 ACCURACY (last pre-departure registration vs ADS-B truth)
   adb      right=20 wrong=4  (83%)
@@ -22,7 +22,7 @@ COVERAGE (flights where the provider had a registration before departure)
   AC   adb=0/4  aeroapi=4/4
   AY   adb=0/4  aeroapi=1/4
   AZ   adb=2/4  aeroapi=0/4
-  BA   adb=22/95  aeroapi=63/95
+  BA   adb=22/95  aeroapi=65/95
   BY   adb=0/8  aeroapi=0/8
   CX   adb=0/4  aeroapi=1/4
   EI   adb=1/5  aeroapi=0/5
@@ -37,19 +37,19 @@ COVERAGE (flights where the provider had a registration before departure)
   SK   adb=0/4  aeroapi=0/4
   SV   adb=0/4  aeroapi=4/4
   TK   adb=0/4  aeroapi=0/4
-  U2   adb=4/32  aeroapi=14/32
+  U2   adb=4/32  aeroapi=15/32
   UA   adb=0/4  aeroapi=4/4
   VS   adb=0/4  aeroapi=0/4
 
 SETTLING (registration changed since the previous observation, by hours before departure)
-  24h+      4 of  160  ( 2.5%)
-  12-24h    9 of  167  ( 5.4%)
-  6-12h     6 of  101  ( 5.9%)
-  3-6h      2 of   41  ( 4.9%)
+  24h+      4 of  172  ( 2.3%)
+  12-24h    9 of  179  ( 5.0%)
+  6-12h     6 of  113  ( 5.3%)
+  3-6h      2 of   43  ( 4.7%)
   <3h       2 of   51  ( 3.9%)
 
 SETTLING BY HAUL (route distance from AeroAPI; short <900mi, medium <2500mi, long beyond)
-  short      9 of  168  ( 5.4%)
-  medium     6 of  104  ( 5.8%)
-  long       8 of  242  ( 3.3%)
+  short      9 of  182  ( 4.9%)
+  medium     6 of  113  ( 5.3%)
+  long       8 of  257  ( 3.1%)
   unknown    0 of    6  ( 0.0%)
