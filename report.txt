@@ -1,9 +1,9 @@
 
-238 flight-dates, 4413 observations
+238 flight-dates, 4754 observations
 
 LEAD TIME (hours before departure the registration first appeared, pre-departure obs only)
   adb      n= 34  median=  5.5h  min=  1.3h  max= 39.9h
-  aeroapi  n= 86  median= 12.0h  min=  0.1h  max= 46.6h
+  aeroapi  n= 94  median= 12.2h  min=  0.1h  max= 46.6h
 
 ACCURACY (last pre-departure registration vs ADS-B truth)
   adb      right=20 wrong=4  (83%)
@@ -17,11 +17,11 @@ DISAGREEMENTS (both had a value, values differ) -> adb / aeroapi / truth
   U28033@06:30 / 2026-09-05 / G-EJCJ / G-ZXIF / ?
 
 COVERAGE (flights where the provider had a registration before departure)
-  AA   adb=0/4  aeroapi=3/4
-  AC   adb=0/4  aeroapi=3/4
+  AA   adb=0/4  aeroapi=4/4
+  AC   adb=0/4  aeroapi=4/4
   AY   adb=0/4  aeroapi=1/4
   AZ   adb=2/4  aeroapi=0/4
-  BA   adb=21/95  aeroapi=48/95
+  BA   adb=21/95  aeroapi=52/95
   BY   adb=0/8  aeroapi=0/8
   CX   adb=0/4  aeroapi=1/4
   EI   adb=1/5  aeroapi=0/5
@@ -34,21 +34,21 @@ COVERAGE (flights where the provider had a registration before departure)
   MS   adb=0/4  aeroapi=0/4
   QR   adb=0/4  aeroapi=0/4
   SK   adb=0/4  aeroapi=0/4
-  SV   adb=0/4  aeroapi=3/4
+  SV   adb=0/4  aeroapi=4/4
   TK   adb=0/4  aeroapi=0/4
   U2   adb=3/32  aeroapi=13/32
-  UA   adb=0/4  aeroapi=3/4
+  UA   adb=0/4  aeroapi=4/4
   VS   adb=0/4  aeroapi=0/4
 
 SETTLING (registration changed since the previous observation, by hours before departure)
-  24h+      3 of  133  ( 2.3%)
-  12-24h    9 of  123  ( 7.3%)
-  6-12h     6 of   95  ( 6.3%)
+  24h+      3 of  136  ( 2.2%)
+  12-24h    9 of  135  ( 6.7%)
+  6-12h     6 of   97  ( 6.2%)
   3-6h      2 of   39  ( 5.1%)
-  <3h       2 of   46  ( 4.3%)
+  <3h       2 of   48  ( 4.2%)
 
 SETTLING BY HAUL (route distance from AeroAPI; short <900mi, medium <2500mi, long beyond)
-  short      9 of  145  ( 6.2%)
-  medium     6 of   87  ( 6.9%)
-  long       7 of  198  ( 3.5%)
+  short      9 of  149  ( 6.0%)
+  medium     6 of   91  ( 6.6%)
+  long       7 of  209  ( 3.3%)
   unknown    0 of    6  ( 0.0%)
