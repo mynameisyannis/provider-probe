@@ -1,5 +1,32 @@
 # Provider probe — a week of evidence before a migration
 
+## Outcome — settled 6 September 2026, collection stopped
+
+**The rule is AeroAPI precedence: take AeroAPI's registration when it has one,
+fall back to AeroDataBox when it does not.** The scheduled workflow passes are
+off and the nightly review is stood down. `observations.csv` and `report.txt`
+are the record; `python3 score.py` reproduces the report without calling any
+provider.
+
+Against the thresholds agreed in §4 *before* the data came in:
+
+| Threshold | Result | Verdict |
+|---|---|---|
+| AeroAPI wrong where ADB was right → precedence out | **0 cases** in 95 scored rotations | precedence survives |
+| ADB wrong where AeroAPI was right → gap-fill out | **4 cases, 2 distinct flight numbers** (BA249 on the 3rd, 4th, 5th; U28033 on the 5th) | gap-fill is out |
+| AeroAPI's median lead under 2h → not worth the fee | **13.4h vs 6.4h**, a 7h lead | worth it |
+
+Accuracy on the last pre-departure registration vs ADS-B truth: AeroAPI **72
+right / 1 wrong (99%)**, AeroDataBox **28 / 6 (82%)**. Rule simulation over the
+same 95 rotations (recorded 6 Sept): precedence **74 / 2 / 19** beat gap-fill
+**70 / 6 / 19** at equal silence.
+
+One rotation beat both providers, LX461 on the 4th. That is the irreducible
+ceiling, not an argument for either source.
+
+To re-run by hand, dispatch the workflow from the Actions tab. To resume
+collection, uncomment the schedule block in `.github/workflows/probe.yml`.
+
 Two stdlib-only scripts. Nothing installs, nothing touches the repo or hosted.
 
     export ADB_KEY=...  AEROAPI_KEY=...  FR24_TOKEN=...
@@ -31,6 +58,9 @@ so every one of these is represented at least twice:
 - at least three departures before 08:00 local (overnight assignment)
 
 ## 2. Run it on a cadence
+
+*Historical — this is how the week of data was collected. The schedule is now
+off; see Outcome above.*
 
 Each flight is worth probing at roughly **T−24h, T−12h, T−6h, T−3h, T−1h, and
 T+15m**. The easiest way is to run the whole list every three hours and let
