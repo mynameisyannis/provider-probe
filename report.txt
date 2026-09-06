@@ -1,9 +1,9 @@
 
-238 flight-dates, 5835 observations
+295 flight-dates, 6176 observations
 
 LEAD TIME (hours before departure the registration first appeared, pre-departure obs only)
-  adb      n= 38  median=  5.6h  min=  1.3h  max= 39.9h
-  aeroapi  n=110  median= 14.8h  min=  0.1h  max= 46.6h
+  adb      n= 41  median=  6.4h  min=  1.3h  max= 39.9h
+  aeroapi  n=116  median= 13.4h  min=  0.1h  max= 46.6h
 
 ACCURACY (last pre-departure registration vs ADS-B truth)
   adb      right=28 wrong=6  (82%)
@@ -18,38 +18,38 @@ DISAGREEMENTS (both had a value, values differ) -> adb / aeroapi / truth
   U28033@06:30 / 2026-09-05 / G-EJCJ / G-ZXIF / G-ZXIF
 
 COVERAGE (flights where the provider had a registration before departure)
-  AA   adb=0/4  aeroapi=4/4
-  AC   adb=0/4  aeroapi=4/4
-  AY   adb=0/4  aeroapi=1/4
-  AZ   adb=2/4  aeroapi=0/4
-  BA   adb=22/95  aeroapi=65/95
-  BY   adb=0/8  aeroapi=0/8
-  CX   adb=0/4  aeroapi=1/4
-  EI   adb=1/5  aeroapi=0/5
-  EK   adb=0/12  aeroapi=5/12
-  GR   adb=0/4  aeroapi=0/4
-  KL   adb=2/13  aeroapi=1/13
-  LG   adb=0/4  aeroapi=0/4
-  LS   adb=0/4  aeroapi=1/4
-  LX   adb=7/13  aeroapi=5/13
-  MS   adb=0/4  aeroapi=0/4
-  QR   adb=0/4  aeroapi=0/4
-  SK   adb=0/4  aeroapi=0/4
-  SV   adb=0/4  aeroapi=4/4
-  TK   adb=0/4  aeroapi=0/4
-  U2   adb=4/32  aeroapi=15/32
-  UA   adb=0/4  aeroapi=4/4
-  VS   adb=0/4  aeroapi=0/4
+  AA   adb=0/5  aeroapi=4/5
+  AC   adb=0/5  aeroapi=4/5
+  AY   adb=0/5  aeroapi=1/5
+  AZ   adb=3/5  aeroapi=0/5
+  BA   adb=23/117  aeroapi=65/117
+  BY   adb=0/10  aeroapi=0/10
+  CX   adb=0/5  aeroapi=1/5
+  EI   adb=1/6  aeroapi=0/6
+  EK   adb=0/15  aeroapi=5/15
+  GR   adb=0/5  aeroapi=0/5
+  KL   adb=3/16  aeroapi=2/16
+  LG   adb=0/5  aeroapi=0/5
+  LS   adb=0/5  aeroapi=1/5
+  LX   adb=7/16  aeroapi=7/16
+  MS   adb=0/5  aeroapi=0/5
+  QR   adb=0/5  aeroapi=0/5
+  SK   adb=0/5  aeroapi=0/5
+  SV   adb=0/5  aeroapi=4/5
+  TK   adb=0/5  aeroapi=0/5
+  U2   adb=4/40  aeroapi=18/40
+  UA   adb=0/5  aeroapi=4/5
+  VS   adb=0/5  aeroapi=0/5
 
 SETTLING (registration changed since the previous observation, by hours before departure)
-  24h+      4 of  172  ( 2.3%)
-  12-24h    9 of  179  ( 5.0%)
-  6-12h     6 of  113  ( 5.3%)
-  3-6h      2 of   43  ( 4.7%)
-  <3h       2 of   51  ( 3.9%)
+  24h+      4 of  186  ( 2.2%)
+  12-24h    9 of  182  ( 4.9%)
+  6-12h     6 of  122  ( 4.9%)
+  3-6h      2 of   52  ( 3.8%)
+  <3h       2 of   57  ( 3.5%)
 
 SETTLING BY HAUL (route distance from AeroAPI; short <900mi, medium <2500mi, long beyond)
-  short      9 of  182  ( 4.9%)
-  medium     6 of  113  ( 5.3%)
-  long       8 of  257  ( 3.1%)
+  short      9 of  197  ( 4.6%)
+  medium     6 of  123  ( 4.9%)
+  long       8 of  273  ( 2.9%)
   unknown    0 of    6  ( 0.0%)
